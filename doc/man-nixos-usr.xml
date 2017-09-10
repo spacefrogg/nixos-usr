@@ -1,0 +1,149 @@
+<refentry xmlns="http://docbook.org/ns/docbook"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<refmeta>
+  <refentrytitle><command>nixos-usr</command></refentrytitle>
+  <manvolnum>8</manvolnum>
+  <refmiscinfo class="source">Nixos-usr</refmiscinfo>
+  <refmiscinfo class="version"><xi:include href="version" parse="text"/></refmiscinfo>
+</refmeta>
+
+<refnamediv>
+  <refname><command>nixos-usr</command></refname>
+  <refpurpose>reconfigure a NixOS user configuration</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+  <cmdsynopsis>
+    <command>nixos-usr</command>
+    <group choice='req'>
+      <arg choice='plain'><option>switch</option></arg>
+      <arg choice='plain'><option>test</option></arg>
+      <arg choice='plain'><option>build</option></arg>
+      <arg choice='plain'><option>dry-activate</option></arg>
+    </group>
+    <sbr />
+    <arg>
+      <group choice='req'>
+        <arg choice='plain'><option>--profile-name</option></arg>
+        <arg choice='plain'><option>-p</option></arg>
+      </group>
+      <replaceable>name</replaceable>
+    </arg>
+  </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsection><title>Description</title>
+
+<para>This command updates your user configuration so that it corresponds to
+the configuration specified in <literal>nixos-usr</literal>. Thus, it is an
+accompanying program to <literal>nixos-rebuild</literal> for managing user
+configuration files in <filename>~/</filename>. Similarly, every time you
+change your configuration you must run <command>nixos-usr</command> to make
+the changes take effect. Also similar to <command>nixos-rebuild</command>,
+it builds the new user configuration in <filename>/nix/store</filename> and
+runs the generated activation script.</para>
+
+<para>This command has one required argument, the desired operation to
+run. It must be one of the following:
+
+<variablelist>
+  <varlistentry>
+    <term><option>switch</option></term>
+    <listitem>
+      <para>Build and activate the new configuration. Also, make it the
+      default configuration. That is, the configuration is added to the
+      profile path
+      <filename>/nix/var/nix/profiles/per-user/.../nixos-usr</filename>.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>test</option></term>
+    <listitem>
+      <para>Build and activate the new configuration, but do not touch the
+      profile. You can test the effects of the configuration, but it gets
+      lost as soon as you start a new session.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>build</option></term>
+    <listitem>
+      <para>Build the new configuration, but do neither activate it nor
+      change the profile. It generates a symlink in the current working
+      directory, named <filename>result</filename>, which points to the
+      output of the <literal>usrEnv</literal> derivation. It is essentially
+      the same as doing
+<screen>
+$ nix-build /path/to/nixos-usr
+</screen></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><option>dry-build</option></term>
+    <listitem>
+      <para>Show what store paths would be built by any of the operations
+      above. Otherwise do nothing.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+</para>
+
+</refsection>
+
+<refsection><title>Options</title>
+<para>This command accepts the following options:</para>
+
+<variablelist>
+  <varlistentry>
+    <term><option>--profile-name</option></term>
+    <term><option>-p</option></term>
+    <listitem>
+      <para>Instead of using the Nix profile
+      <filename>/nix/var/nix/profiles/per-user/<replaceable>user</replaceable>/nixos-usr</filename>
+      to keep track of the current and previous configurations, use
+      <filename>/nix/var/nix/profiles/per-user/<replaceable>user</replaceable>/<replaceable>name</replaceable></filename>.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsection>
+
+<refsection><title>Environment</title>
+<variablelist>
+  <varlistentry>
+    <term><envar>NIX_PATH</envar>=nixos-usr=<replaceable>path</replaceable></term>
+    <listitem>
+      <para>Path to the nixos-usr modules.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><envar>NIX_PATH</envar>=nixos-usr-config=<replaceable>path</replaceable></term>
+    <listitem>
+      <para>Path to the users configuration module. Defaults to
+      <filename>~/.config/nixos-usr/configuration.nix</filename>.</para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><envar>NIXOS_USR_CONFIG</envar></term>
+    <listitem>
+      <para>Alternative path to the users configuration module. Takes
+      precedence over <literal>NIX_PATH</literal>. Defaults to
+      <filename>~/.config/nixos-usr/configuration.nix</filename>.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsection>
+
+<refsection><title>Files</title>
+<variablelist>
+  <varlistentry>
+    <term><filename>~/.tree</filename></term>
+    <listitem>
+      <para>This file keeps the current tree of files managed by
+      <literal>nixos-usr</literal>. Used to clean up old symlinks.</para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</refsection>
+</refentry>

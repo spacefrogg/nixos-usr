@@ -1,0 +1,23 @@
+<reference xmlns="http://docbook.org/ns/docbook"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>NixOS User Reference Pages</title>
+
+  <info>
+    <author>
+      <personname>
+        <firstname>Michael</firstname>
+        <surname>Raitza</surname>
+      </personname>
+      <contrib>Author</contrib>
+    </author>
+
+    <copyright>
+      <year>2017</year>
+      <holder>Michael Raitza</holder>
+    </copyright>
+  </info>
+
+  <xi:include href="man-nixos-usr.xml" />
+
+</reference>

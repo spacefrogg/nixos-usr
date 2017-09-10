@@ -1,0 +1,30 @@
+* Yet another system to manage configuration files in =~/= like =configuration.nix=
+
+This package largely copies the methods used to implement the NixOS module
+and configuration system. On the one hand, this makes it look and feel like
+=configuration.nix=. On the other hand, it should be fairly easy to
+integrate it into NixOS itself (should this ever be considered).
+
+** Installation and setup
+
+Use your preferred way to install nixos-usr into your environment and you
+will be awarded with a =nixos-usr= binary that acts similar to
+=nixos-rebuild=. Use =nixos-usr --help= to read the man page.
+
+Nixos-usr reads the =NIX_PATH= environment variable to find its modules and
+the user configuration file, where =<nixos-usr>= points to this repository
+with its modules, and =<nixos-usr-config>= or the =NIXOS_USR_CONFIG=
+variable point to the user configuration file itself.
+
+** Usage
+
+Write a user configuration Nix file that adds attributes to the =usrEnv.home=
+attribute set, which fulfills the same function as =environment.etc= does
+for NixOS. See the documentation for =usrEnv.home= for how to work with
+files that contain sensitive information that should not end up in
+=/nix/store=!
+
+If you must, you can access the current system configuration from the
+=usrEnv.systemConfig= attribute to e.g. depend your configuration on the
+machine's host name. It is currently used to retrieve the user's home
+directory as set in =configuration.nix=.
