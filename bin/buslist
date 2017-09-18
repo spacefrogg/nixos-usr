@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+. $(dirname ${BASH_SOURCE[0]})/functions.sh
+
+declare -a name desc loaded active substate follows path job_id job_type job_path
+declare -a vars=(name desc loaded active substate follows path job_id job_type job_path)
+declare -a activeUnits
+
+read_unitList() {
+    read_dbus ListUnits
+    read_msg "a(ssssssouso)" '{
+        local k typevar reply
+        read k typevar reply
+        eval "${vars[$k]}+=(\\"$reply\\")"
+    }'
+
+    # Filter active units
+    for ((n=0; n<${#name[@]}; n=n+1)); do
+        if [ "${active[$n]}" == active -o "${active[$n]}" == activating ]; then
+            activeUnits+=($n)
+        fi
+    done
+
+    for n in ${activeUnits[@]} ; do
+        :
+    done
+
+    # for n in ${activeUnits[@]}; do
+    #     printf "%s\n\t%s\n\t%s %s %s\n" "${name[$n]}" "${desc[$n]}" "${loaded[$n]}" "${active[$n]}" "${substate[$n]}"
+    # done
+}
+
+parse_unitFiles() {
+    local n
+    local -a path status
+    local -a vars=(path status)
+    read_msg 'a(ss)' '{
+        local k typevar reply
+        read k typevar reply
+
+        eval "${vars[$k]}+=(\\"$reply\\")"
+    }'
+
+    for ((n=0; n<${#path[@]}; n=n+1)); do
+        case "${status[$n]}" in
+            disabled|transient|masked) ;;
+            *) echo "${path[$n]}"
+               ;;
+        esac
+    done
+}
+
+#read_dbus ListUnits
+# read_unitList
+
+read_dbus ListUnitFiles
+parse_unitFiles
