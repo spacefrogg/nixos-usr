@@ -4,7 +4,7 @@ with pkgs;
 
 let
   lib = pkgs.lib;
-  nixosDocPath = <nixpkgs/nixos/doc/manual>;
+  nixosDocPath = <nixpkgs/doc>;
   sources = lib.sourceFilesBySuffices ./. [ ".xml" ];
 
   modulesDoc = builtins.toFile "modules.xml" ''

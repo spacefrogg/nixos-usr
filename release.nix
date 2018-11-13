@@ -22,10 +22,10 @@ in rec {
     pkgs.stdenvNoCC.mkDerivation {
       name = "nixos-usr-${version}";
       inherit version;
-  
+
       preferLocalBuild = true;
       allowSubstitutes = false;
-  
+
       buildCommand = ''
         mkdir -p $out/bin $out/share/man/man8 $out/nixos-usr
         substitute ${./bin/nixos-usr.sh} $out/bin/nixos-usr --subst-var shell --subst-var nixBuild --subst-var manual \
@@ -34,7 +34,7 @@ in rec {
         cp $manual $out/share/man/man8
         cp -r ${./src}/* $out/nixos-usr #*/
       '';
-  
+
       shell = "${pkgs.stdenvNoCC.shell}";
       nixBuild = "${pkgs.nix}/bin/nix-build";
       manual = "${manpages.${system}}/share/man/man8/nixos-usr.8";
