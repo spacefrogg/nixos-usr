@@ -20,6 +20,10 @@ if [ -z "$(echo "$NIX_PATH" | grep -e '\(^\|.:\)nixos-usr=' -)" ]; then
     NIX_PATH=$NIX_PATH:nixos-usr=@out@/nixos-usr
 fi
 
+if [ -z "$(echo "$NIX_PATH" | grep -e '\(^\|.:\)nixos-usr-config=' -)" ]; then
+    NIX_PATH=$NIX_PATH:nixos-usr-config=${XDG_CONFIG_HOME:-$HOME/.config}/nixos-usr/configuration.nix
+fi
+
 while [ "$#" -gt 0 ]; do
     opt="$1"; shift
     case "$opt" in
