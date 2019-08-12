@@ -6,23 +6,14 @@
 let
   eval = import <nixpkgs/nixos/lib/eval-config.nix> {
     inherit system;
-    baseModules = (import ./modules/module-list.nix)
-                  # Some standard NixOS modules we need
-                  ++ [ <nixpkgs/nixos/modules/misc/nixpkgs.nix>
-                       <nixpkgs/nixos/modules/misc/assertions.nix>
-                       rec { _file = ./default.nix;
-                         key = _file;
-                         config = {
-                           _module.args.systemConfiguration = configuration;
-                         };
-                       }
-                     ];
-    modules = [ userConfiguration ];
-    specialArgs = { modulesPath = ./modules; };
+    modules = [
+      configuration
+      userConfiguration
+    ] ++ (import ./modules/module-list.nix);
   };
 
 in {
   inherit (eval) config options;
-  
+
   usrEnv = eval.config.usrEnv.build.toplevel;
 }
